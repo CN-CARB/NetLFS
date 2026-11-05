@@ -1,0 +1,51 @@
+{
+    "diagnostics": {
+        "severity": {
+            "unused": "hint",
+            "undefined-field": "information",
+            "redundant-return": "hint",
+            "redundant-return-value": "hint",
+            "param-type-mismatch": "information",
+            "missing-fields": "information",
+            "assign-type-mismatch": "information",
+            "return-type-mismatch": "information",
+            "missing-parameter": "information",
+            "cast-type-mismatch": "information"
+        },
+
+        "disable": [
+            "duplicate-set-field",
+            "duplicate-type",
+            "inject-field",
+            "unnecessary-if",
+            "need-check-nil",
+            "unresolved-require"
+        ],
+
+        "diagnosticInterval": 500
+    },
+
+    "completion": {
+        "callSnippet": false,
+        "stagedCallSnippets": true
+    },
+
+    "runtime": {
+        "nonstandardSymbol": [
+            "continue"
+        ],
+        "requireLikeFunction": [
+            "include",
+            "AddCSLuaFiles"
+        ],
+        "version": "LuaJIT"
+    },
+
+    "hint": {
+        "paramHint": false
+    },
+
+    "lint": {
+        "spellCheck": false
+    }
+}
