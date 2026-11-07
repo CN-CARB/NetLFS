@@ -117,6 +117,10 @@ local function requireToken()
     TOKEN_REGISTERING = true
 end
 
+hook.Add("NetLFS_RefreshEndPoint", "NetLFS_RefreshToken", function()
+    NetLFS.InvalidateToken(NetLFS.Cache.Token_Server)
+end)
+
 hook.Add("RiceLibClientReady", "NetLFS_SendClientToken", function(client_player)
     RiceLib.Protobuf.Send("NetLFS.Token", {
         Token = NetLFS.Cache.Token_Client
@@ -143,14 +147,5 @@ end)
 concommand.Add("net_lfs_refresh_token", function(ply)
     if IsValid(ply) and not ply:IsSuperAdmin() then return end
 
-    next_check = math.huge
-
-    TOKEN_IS_VALID = false
-    TOKEN_REGISTERING = false
-    TOKEN_EXPIRE_TIME = 0
-
-    NetLFS.Cache.Token_IsValid = false
-    NetLFS.Cache.Token_ExpireTime = 0
-
-    requireToken()
+    NetLFS.InvalidateToken(NetLFS.Cache.Token_Server)
 end)
