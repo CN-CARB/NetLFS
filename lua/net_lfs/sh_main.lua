@@ -205,8 +205,9 @@ end
 --- @param target_receiver string The ID of the receiver
 --- @param data string The raw data to send
 --- @param target Player|nil The target player (server only)
+--- @param onUploaded fun(file_id, file_hash)|nil Optional callback when the file has been successfully uploaded
 --- @param onTargetReceived fun(player: Player|nil)|nil Optional callback when the target has received and handled the file (player is the acknowledging client on the server)
-function NetLFS.SendRaw(target_receiver, data, target, onTargetReceived)
+function NetLFS.SendRaw(target_receiver, data, target, onUploaded, onTargetReceived)
     if CLIENT and target then
         RiceLib.Warn("Target should not be specified on the client side.", "NetLFS")
     end
@@ -231,6 +232,10 @@ function NetLFS.SendRaw(target_receiver, data, target, onTargetReceived)
             RiceLib.Error("Empty response or missing file ID", "NetLFS")
 
             return
+        end
+
+        if onUploaded then
+            onUploaded(file_id, file_hash)
         end
 
         if not UploadedFilesRecord[file_hash] then

@@ -40,12 +40,13 @@ end
 --- Marks the server token as invalid (e.g. after a 401); the refresh loop in Think fetches a new one.
 --- Does nothing if the token was already replaced since the failed request was made.
 --- @param failed_token string The token used by the request that got rejected
-function NetLFS.InvalidateToken(failed_token)
-    if failed_token ~= NetLFS.Cache.Token_Server then return end
-    if not TOKEN_IS_VALID then return end
+function NetLFS.InvalidateToken(failed_token, forced)
+    if failed_token ~= NetLFS.Cache.Token_Server and not forced then return end
+    if not TOKEN_IS_VALID and not forced then return end
 
     TOKEN_IS_VALID = false
     TOKEN_EXPIRE_TIME = 0
+    TOKEN_REGISTERING = false
 
     NetLFS.Cache.Token_IsValid = false
     NetLFS.Cache.Token_ExpireTime = 0
@@ -118,7 +119,7 @@ local function requireToken()
 end
 
 hook.Add("NetLFS_RefreshEndPoint", "NetLFS_RefreshToken", function()
-    NetLFS.InvalidateToken(NetLFS.Cache.Token_Server)
+    NetLFS.InvalidateToken(_, true)
 end)
 
 hook.Add("RiceLibClientReady", "NetLFS_SendClientToken", function(client_player)
@@ -147,5 +148,5 @@ end)
 concommand.Add("net_lfs_refresh_token", function(ply)
     if IsValid(ply) and not ply:IsSuperAdmin() then return end
 
-    NetLFS.InvalidateToken(NetLFS.Cache.Token_Server)
+    NetLFS.InvalidateToken(_, true)
 end)
